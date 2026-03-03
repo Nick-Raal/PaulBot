@@ -30,7 +30,9 @@ vex::competition comp;
 
 
 
-  motor intake = motor(PORT16, ratio18_1, false);
+  motor bIntake = motor(PORT16, ratio18_1, false);
+  motor fIntake = motor(PORT21, ratio18_1, false);
+  motor_group intake = motor_group(bIntake, fIntake);
 
   motor lever = motor(PORT19, ratio36_1, true);
   limit leverLimit = limit(Brain.ThreeWirePort.A);
@@ -65,7 +67,7 @@ void Undescore(){
 
 bool descoreUp = false;
 void DescoreToggle(){
-  descoreUp = !descore;
+  descoreUp = !descoreUp;
   descore.spinToPosition(descoreUp ? 175 : 140, degrees);
 }
 
@@ -153,7 +155,7 @@ void DriverLoop(){
 //   int rightB = controllerY + controllerX - turning;
 
 //turning set to 35% at driver request
-  float scaleFactor = Controller1.ButtonL1.pressing() ? 1 : 0.5;
+  float scaleFactor = Controller1.ButtonR2.pressing() ? 1 : 0.5;
   xdrive.setTarget((isReversed ? -1 : 1) * controllerX * scaleFactor, (isReversed ? -1 : 1) * controllerY * scaleFactor, turning*0.35f);
 
 
@@ -207,10 +209,10 @@ int main() {
 
   Controller1.ButtonL2.pressed(IntakeNotGoSlo);
   Controller1.ButtonR2.pressed(IntakeGo);
-  // Controller1.ButtonL1.pressed(IntakeNotGo);
+  Controller1.ButtonL1.pressed(IntakeNotGo);
   Controller1.ButtonR1.pressed(IntakeGo);
 
-  // Controller1.ButtonL1.released(IntakeStop);
+  Controller1.ButtonL1.released(IntakeStop);
   Controller1.ButtonR1.released(IntakeStop);
   Controller1.ButtonL2.released(IntakeStop);
   Controller1.ButtonR2.released(IntakeStop);
