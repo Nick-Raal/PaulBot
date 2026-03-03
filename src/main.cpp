@@ -207,10 +207,10 @@ int main() {
 
   Controller1.ButtonL2.pressed(IntakeNotGoSlo);
   Controller1.ButtonR2.pressed(IntakeGo);
-  Controller1.ButtonL1.pressed(IntakeNotGo);
+  // Controller1.ButtonL1.pressed(IntakeNotGo);
   Controller1.ButtonR1.pressed(IntakeGo);
 
-  Controller1.ButtonL1.released(IntakeStop);
+  // Controller1.ButtonL1.released(IntakeStop);
   Controller1.ButtonR1.released(IntakeStop);
   Controller1.ButtonL2.released(IntakeStop);
   Controller1.ButtonR2.released(IntakeStop);
