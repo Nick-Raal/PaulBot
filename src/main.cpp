@@ -38,6 +38,8 @@ vex::competition comp;
 
   motor descore = motor(PORT12, ratio18_1);
 
+bool isReversed = false;
+
 void liftControl(bool on){
   lift = on;
 }
@@ -50,11 +52,25 @@ void liftOff(){
   liftControl(false);
 }
 
+void Undescore();
+
 void Descore(){
   descore.spinToPosition(140, degrees);
+  Controller1.ButtonB.pressed(Undescore);
 }
 void Undescore(){
   descore.spinToPosition(175, degrees);
+  Controller1.ButtonB.pressed(Descore);
+}
+
+bool descoreUp = false;
+void DescoreToggle(){
+  descoreUp = !descore;
+  descore.spinToPosition(descoreUp ? 175 : 140, degrees);
+}
+
+void DescoreStore(){
+  descore.spinToPosition(20, degrees);
 }
 
 void IntakeGo(){
@@ -71,6 +87,10 @@ void IntakeNotGoSlo(){
 
 void IntakeStop(){
   intake.stop();
+}
+
+void InvertControls(){
+  isReversed = !isReversed;
 }
 
 void shoot(){
@@ -91,7 +111,7 @@ void shoot(){
 
     //lever.spinFor(fwd, -distance * 1.045, degrees, true);
    lever.spin(fwd, 100, pct);
-  while(abs(lever.velocity(pct) > 0.5) || abs(lever.position(degrees)/distance) < 0.5f  && !Controller1.ButtonX.pressing()){
+  while(abs(lever.velocity(pct) > 0.5) || abs(lever.position(degrees)/distance) > 0.5f  && !Controller1.ButtonX.pressing()){
     lever.spin(fwd, 100, pct);
   }
   lever.stop();
@@ -132,10 +152,8 @@ void DriverLoop(){
 //   int rightF = controllerY - controllerX - turning;
 //   int rightB = controllerY + controllerX - turning;
 
-    xdrive.setTarget(controllerX, controllerY, turning);
+  xdrive.setTarget((isReversed ? -1 : 1) * controllerX, (isReversed ? -1 : 1) * controllerY, turning);
 
-  Controller1.ButtonUp.pressed(liftOn);
-  Controller1.ButtonDown.pressed(liftOff);
 
 Controller1.Screen.setCursor(1,1);
   Controller1.Screen.print(leverLimit1.pressing());
@@ -177,22 +195,26 @@ int main() {
 //   vex::Gif gif("world.gif", 200, 0 );
 //   vex::Gif gif1 ("hapy.gif", 0, 0);
 
-  Controller1.ButtonLeft.pressed(Descore);
+  Controller1.ButtonLeft.pressed(DescoreStore);
   Controller1.ButtonRight.pressed(Undescore);
+  Controller1.ButtonB.pressed(DescoreToggle);
+
+
   Controller1.ButtonA.pressed(shoot);
+  Controller1.ButtonY.pressed(InvertControls);
+
   Controller1.ButtonL2.pressed(IntakeNotGoSlo);
   Controller1.ButtonR2.pressed(IntakeGo);
-  Controller1.ButtonL2.released(IntakeStop);
-  Controller1.ButtonR2.released(IntakeStop);
   Controller1.ButtonL1.pressed(IntakeNotGo);
   Controller1.ButtonR1.pressed(IntakeGo);
+
   Controller1.ButtonL1.released(IntakeStop);
   Controller1.ButtonR1.released(IntakeStop);
+  Controller1.ButtonL2.released(IntakeStop);
+  Controller1.ButtonR2.released(IntakeStop);
 
-  Controller1.ButtonUp.pressed(Descore);
-  Controller1.ButtonDown.pressed(Undescore);
-
-  
+  Controller1.ButtonUp.pressed(liftOn);
+  Controller1.ButtonDown.pressed(liftOff);
   
   Controller1.ButtonX.pressed(LeverDown);
   Controller1.ButtonX.released(LeverStop);
