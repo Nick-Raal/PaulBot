@@ -152,10 +152,12 @@ void DriverLoop(){
 //   int rightF = controllerY - controllerX - turning;
 //   int rightB = controllerY + controllerX - turning;
 
-  xdrive.setTarget((isReversed ? -1 : 1) * controllerX, (isReversed ? -1 : 1) * controllerY, turning);
+//turning set to 35% at driver request
+  float scaleFactor = Controller1.ButtonL1.pressing() ? 1 : 0.5;
+  xdrive.setTarget((isReversed ? -1 : 1) * controllerX * scaleFactor, (isReversed ? -1 : 1) * controllerY * scaleFactor, turning*0.35f);
 
 
-Controller1.Screen.setCursor(1,1);
+  Controller1.Screen.setCursor(1,1);
   Controller1.Screen.print(leverLimit1.pressing());
 
   wait(20, msec);
