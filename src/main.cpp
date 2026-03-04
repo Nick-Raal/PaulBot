@@ -30,9 +30,7 @@ vex::competition comp;
 
 
 
-  motor bIntake = motor(PORT16, ratio18_1, false);
-  motor fIntake = motor(PORT21, ratio18_1, false);
-  motor_group intake = motor_group(bIntake, fIntake);
+  motor Intake = motor(PORT16, ratio18_1, false);
 
   motor lever = motor(PORT19, ratio36_1, true);
   limit leverLimit = limit(Brain.ThreeWirePort.A);
